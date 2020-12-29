@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+
+  The effect of the Royal weapon series: "Focus"<br>
+  - Upon damaging an enemy, increases CRIT Rate by 8%. Max 5 stacks. A CRIT hit removes all stacks.<br>
+  <br><br>
+
+  <form action="#">
+    Initial Crit Rate:
+    <input type="text" id="initial_crit">
+    <input type="button" onclick="calc();" value="Calculate">
+  </form>
+  <br>
+	<div class="display">
+	</div>
+
+	<script>
+    $('input').on('keydown', function(event) {
+       var x = event.which;
+       if (x === 13) {
+           event.preventDefault();
+           calc();
+       }
+    });
+
+    function calc() {
+      var crit_initial = Number(document.getElementById("initial_crit").value);
+      var crit_rate = crit_initial;
+      var crit_count = 0;
+      var royal_stack = 0;
+      var runs = 10000;
+
+      function royal_effect(boolean) {
+        if(boolean == 0) {
+          if (royal_stack < 5) {
+            royal_stack++;
+            crit_rate = crit_rate + 0.08;
+          }
+        } else if (boolean == 1) {
+          crit_rate = crit_initial;
+          royal_stack = 0;
+        }
+      }
+
+      for (i = 0; i < runs; i++) {
+        let roll = Math.random();
+        if (roll <= crit_rate) {
+          crit_count++;
+          console.log("crit");
+          royal_effect(1);
+        } else {
+          console.log("no crit");
+          royal_effect(0);
+        }
+        console.log("crit_rate: "+crit_rate);
+      }
+
+      console.log("crit_count: "+crit_count);
+      let effective_crit = crit_count/runs;
+      console.log("effective crit rate: "+effective_crit);
+
+      $(".display").html("effective crit rate: "+effective_crit+", over "+runs+" runs.");
+    }
+	</script>
+  </body>
+</html>
